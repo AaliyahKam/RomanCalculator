@@ -1,0 +1,71 @@
+import java.util.*;
+
+public class RomanCalc2 {
+    static Map<Character, Integer> values = Map.of(
+        'I', 1, 'V', 5, 'X', 10, 'L', 50, 
+        'C', 100, 'D', 500, 'M', 1000
+    );
+    
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n1. Add  2. Subtract  3. Multiply  4. Divide  5. To Roman  6. From Roman  7. Exit");
+            System.out.print("Choose: ");
+            int choice = in.nextInt();
+            in.nextLine();
+            
+            if (choice == 7) break;
+            
+            if (choice <= 4) {
+                System.out.print("Enter first Roman numeral: ");
+                int number1 = toDecimal(in.nextLine());
+                System.out.print("Enter second Roman numeral: ");
+                int number2 = toDecimal(in.nextLine());
+                
+                int result = switch (choice) { 
+                    case 1 -> number1 + number2; 
+                    case 2 -> number1 - number2; 
+                    case 3 -> number1 * number2; 
+                    case 4 -> number1 / number2; 
+                    default -> 0; 
+                };
+                
+                System.out.println("Decimal: " + result + ", Roman: " + toRoman(result));
+            } else if (choice == 5) {
+                System.out.print("Enter a number: ");
+                System.out.println("Roman: " + toRoman(in.nextInt()));
+            } else if (choice == 6) {
+                System.out.print("Enter a Roman numeral: ");
+                System.out.println("Decimal: " + toDecimal(in.nextLine()));
+            }
+        }
+        in.close();
+    }
+
+    static int toDecimal(String roman) {
+        int sum = 0, previous = 0;
+        for (char c : roman.toCharArray()) {
+            int value = values.get(c);
+            
+            if (value < previous) {
+                sum -= value; // Subtract if smaller than the previous numeral
+            } else {
+                sum += value; // else add it
+            }
+            
+            previous = value; // the new previous value
+        }
+        return sum;
+    }
+
+    static String toRoman(int total) {  
+        if (total == 0) return "";
+        if (total >= 1000) return "M" + toRoman(total - 1000);
+        if (total >= 500) return "D" + toRoman(total - 500);
+        if (total >= 100) return "C" + toRoman(total - 100);
+        if (total >= 50) return "L" + toRoman(total - 50);
+        if (total >= 10) return "X" + toRoman(total - 10);
+        if (total >= 5) return "V" + toRoman(total - 5);
+        return "I" + toRoman(total - 1);
+    }
+}
